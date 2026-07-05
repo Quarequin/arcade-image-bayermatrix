@@ -52,8 +52,8 @@ Together these keep the pseudo-opacity effect close to zero-allocation per frame
 ## Usage
 
 ```typescript
-// example: draw a sprite with ~50% pseudo-opacity
-bayermatrix.setOpacity(mySprite, 128) // 0 = fully transparent, 255 = fully opaque
+// example: draw a picture with ~50% pseudo-opacity to background
+image.bayer(picture, background, 0, 0, 128, image.bayerLevel.x8) // 0 = fully transparent, 255 = fully opaque
 ```
 
 > Add real usage snippets here once the public API in `api.ts` is finalized.
