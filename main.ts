@@ -43,20 +43,20 @@ FF 7F DF 5F F7 77 D7 57 FD 7D DD 5D F5 75 D5 55
         x16 = 0xF,
     }
     // bayer_drawcore's init (section.data like)
-    let bx: number = 0x0, by: number = 0x0, b: number = 0x0;
+    let bx: number = 0x0, by: number = 0x0, b: number = 0x0, bs: number = 0x0;
     let frowBuf: Buffer = hex``, trowBuf: Buffer = hex``;
-    let curBayer: Buffer = hex``, lnBayer: number = -1;
+    let curBayer: Buffer = hex``, bn: number = -1;
 
     // reuse function (not makecode arcade bulit-in function)
     let math_clamp = Math.clamp, math_abs = Math.abs;
 
-    function bayer_drawcore(from: Image, to: Image, x: number, y: number, opacity: number, bayer: Buffer, bn: number) {
+    function bayer_drawcore(from: Image, to: Image, x: number, y: number, opacity: number) {
         if (!from || !to) return;
         if (opacity >= 0xff) {
             to.drawTransparentImage(from, x, y);
             return;
         } else if (opacity <= 0x00) return;
-        opacity = math_clamp(0x00, 0xff, opacity);
+        opacity = math_clamp(0x00, 0xff, opacity); bs = bn + 1;
         if (frowBuf.length !== from.height) frowBuf = pins.createBuffer(from.height);
         if (trowBuf.length !== to.height) trowBuf = pins.createBuffer(to.height);
         for (let ix = 0;ix < from.width; ix++) {
@@ -71,23 +71,23 @@ FF 7F DF 5F F7 77 D7 57 FD 7D DD 5D F5 75 D5 55
                 if (!frowBuf[iy]) continue;
                 if (trowBuf[iy + y] === frowBuf[iy]) continue;
                 by = (iy + y) & bn;
-                b = bayer[bx + by * (bn + 1)];
+                b = curBayer[bx + by * bs];
                 if (opacity >= b) trowBuf[iy + y] = frowBuf[iy];
             }
             to.setRows(ix + x, trowBuf);
         }
     }
 
-    export function bayerDraw(from: Image, to: Image, x: number, y: number, opacity: number, level?: bayerLevel) {
+    export function bayer(from: Image, to: Image, x: number, y: number, opacity: number, level?: bayerLevel) {
         switch (level) {
-            case bayerLevel.x4: if (lnBayer === bayerLevel.x4) break;
-                curBayer = BAYER4X4_DATA; lnBayer = 0x3; break;
-            case bayerLevel.x8: default: if (lnBayer === bayerLevel.x8) break;
-                curBayer = BAYER8X8_DATA; lnBayer = 0x7; break;
-            case bayerLevel.x16: if (lnBayer === bayerLevel.x16) break;
-                curBayer = BAYER16X16_DATA; lnBayer = 0xF; break;
+            case bayerLevel.x4: if (bn === bayerLevel.x4) break;
+                curBayer = BAYER4X4_DATA; bn = 0x3; break;
+            case bayerLevel.x8: default: if (bn === bayerLevel.x8) break;
+                curBayer = BAYER8X8_DATA; bn = 0x7; break;
+            case bayerLevel.x16: if (bn === bayerLevel.x16) break;
+                curBayer = BAYER16X16_DATA; bn = 0xF; break;
         }
-        bayer_drawcore(from, to, x, y, opacity, curBayer, lnBayer);
+        bayer_drawcore(from, to, x, y, opacity);
     }
     
 }
