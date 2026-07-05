@@ -76,7 +76,7 @@ This repository can be edited in MakeCode.
 
 ## License
 
-See [LICENSE](LICENSE.TXT).
+See [LICENSE](LICENSE.txt).
 
 ## Supported targets
 
