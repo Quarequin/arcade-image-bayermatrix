@@ -42,7 +42,7 @@ FF 7F DF 5F F7 77 D7 57 FD 7D DD 5D F5 75 D5 55
         x8  = 0x8,
         x16 = 0xF,
     }
-    // init
+    // bayer_drawcore's init
     let bx: number, by: number, b: number;
     let frowBuf: Buffer, trowBuf: Buffer;
     let curBayer: Buffer, lnBayer: number
