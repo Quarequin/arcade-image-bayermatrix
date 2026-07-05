@@ -42,31 +42,32 @@ FF 7F DF 5F F7 77 D7 57 FD 7D DD 5D F5 75 D5 55
         x8  = 0x8,
         x16 = 0xF,
     }
-    // bayer_drawcore's init (section.data like)
+    // bayer_drawcore
+    //   bayer_drawcore's init (section.data like)
     let bx: number = 0x0, by: number = 0x0, b: number = 0x0, bs: number = 0x0;
     let frowBuf: Buffer = hex``, trowBuf: Buffer = hex``;
     let curBayer: Buffer = hex``, bn: number = -1;
-
-    // reuse function (not makecode arcade bulit-in function)
-    let math_clamp = Math.clamp, math_abs = Math.abs;
-
+    //   reuse function (not makecode arcade bulit-in function)
+    let local_math_clamp = Math.clamp, local_math_abs = Math.abs,
+    local_neg_abs = (n: number) => { if (n >= 0) return 0; return local_math_abs(n); };
+    // end bayer_drawcore
     function bayer_drawcore(from: Image, to: Image, x: number, y: number, opacity: number) {
         if (!from || !to) return;
         if (opacity >= 0xff) {
             to.drawTransparentImage(from, x, y);
             return;
         } else if (opacity <= 0x00) return;
-        opacity = math_clamp(0x00, 0xff, opacity); bs = bn + 1;
+        opacity = local_math_clamp(0x00, 0xff, opacity); bs = bn + 1;
         if (frowBuf.length !== from.height) frowBuf = pins.createBuffer(from.height);
         if (trowBuf.length !== to.height) trowBuf = pins.createBuffer(to.height);
-        for (let ix = 0;ix < from.width; ix++) {
-            if (ix + x < 0) ix += math_abs(x);
+        for (let ix = local_neg_abs(x); ix < from.width; ix++) {
+            if (ix + x < 0) continue;
             if (ix + x >= to.width) break;
             from.getRows(ix, frowBuf);
             to.getRows(ix + x, trowBuf);
             bx = (ix + x) & bn;
-            for (let iy = 0;iy < frowBuf.length; iy++) {
-                if (iy + y < 0) iy += math_abs(y);
+            for (let iy = local_neg_abs(y); iy < frowBuf.length; iy++) {
+                if (iy + y < 0) continue;
                 if (iy + y >= trowBuf.length) break;
                 if (!frowBuf[iy]) continue;
                 if (trowBuf[iy + y] === frowBuf[iy]) continue;
@@ -87,7 +88,7 @@ FF 7F DF 5F F7 77 D7 57 FD 7D DD 5D F5 75 D5 55
             case bayerLevel.x16: if (bn === bayerLevel.x16) break;
                 curBayer = BAYER16X16_DATA; bn = 0xF; break;
         }
-        bayer_drawcore(from, to, x, y, opacity);
+        bayer_drawcore(from, to, x|0, y|0, opacity|0);
     }
     
 }
