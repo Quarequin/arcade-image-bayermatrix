@@ -37,45 +37,52 @@ CF 4F EF 6F C7 47 E7 67 CD 4D ED 6D C5 45 E5 65
 3F BF 1F 9F 37 B7 17 97 3D BD 1D 9D 35 B5 15 95
 FF 7F DF 5F F7 77 D7 57 FD 7D DD 5D F5 75 D5 55
 `
+    export enum bayerLevel {
+        x4  = 0x4,
+        x8  = 0x8,
+        x16 = 0xF,
+    }
+    // init
+    let bx: number, by: number, b: number;
+    let frowBuf: Buffer, trowBuf: Buffer;
+    let curBayer: Buffer, lnBayer: number
 
-    function bayerDraw(from: Image, to: Image, x: number, y: number, opacity: number, bayer: Buffer, bn: number) {
-        if (!from) return;
+    function bayer_drawcore(from: Image, to: Image, x: number, y: number, opacity: number, bayer: Buffer, bn: number) {
+        if (!from || !to) return;
         if (opacity >= 0xff) {
             to.drawTransparentImage(from, x, y);
             return;
         } else if (opacity <= 0x00) return;
         opacity = Math.clamp(0x00, 0xff, opacity);
-        let frowBuf = pins.createBuffer(from.height);
-        let trowBuf = pins.createBuffer(to.height);
-        let bx = 0x0, by = 0x0, b = 0x0;
+        frowBuf = pins.createBuffer(from.height);
+        trowBuf = pins.createBuffer(to.height);
+        bx = 0x0, by = 0x0, b = 0x0;
         for (let ix = 0;ix < from.width; ix++) {
             if (ix + x < 0) continue;
             if (ix + x >= to.width) break;
             from.getRows(ix, frowBuf);
             to.getRows(ix + x, trowBuf);
-            bx = (ix + x) & (bn - 1);
+            bx = (ix + x) & bn;
             for (let iy = 0;iy < frowBuf.length; iy++) {
                 if (iy + y < 0) continue;
                 if (iy + y >= trowBuf.length) break;
                 if (!frowBuf[iy]) continue;
-                by = (iy + y) & (bn - 1);
-                b = bayer[bx + (by * bn)];
+                if (trowBuf[iy + y] === frowBuf[iy]) continue;
+                by = (iy + y) & bn;
+                b = bayer[bx + (by * (bn + 1))];
                 if (opacity >= b) trowBuf[iy + y] = frowBuf[iy];
             }
             to.setRows(ix + x, trowBuf);
         }
     }
 
-    export function bayerDraw4(from: Image, to: Image, x: number, y: number, opacity: number) {
-        bayerDraw(from, to, x, y, opacity, BAYER4X4_DATA, 0x4);
-    }
-
-    export function bayerDraw8(from: Image, to: Image, x: number, y: number, opacity: number) {
-        bayerDraw(from, to, x, y, opacity, BAYER8X8_DATA, 0x8);
-    }
-
-    export function bayerDraw16(from: Image, to: Image, x: number, y: number, opacity: number) {
-        bayerDraw(from, to, x, y, opacity, BAYER16X16_DATA, 0x10);
+    export function bayerDraw(from: Image, to: Image, x: number, y: number, opacity: number, level?: bayerLevel) {
+        switch (level) {
+            case bayerLevel.x4: curBayer = BAYER4X4_DATA; lnBayer = 0x3; break;
+            case bayerLevel.x8: default: curBayer = BAYER8X8_DATA; lnBayer = 0x7; break;
+            case bayerLevel.x16: curBayer = BAYER16X16_DATA; lnBayer = 0xF; break;
+        }
+        bayer_drawcore(from, to, x, y, opacity, curBayer, lnBayer);
     }
     
 }

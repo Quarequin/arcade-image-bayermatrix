@@ -494,7 +494,7 @@ let pics = [
 ]
 let r = randint(0, pics.length - 1), cr = r; let pic = pics[r]; let t = 0;
 forever(() => {
-    image.bayerDraw16(pic, scene.backgroundImage(), 0, 0, t)
+    image.bayerDraw(pic, scene.backgroundImage(), 0, 0, t, 0xF)
     if (t > ((t + 1) & 0xff)) {
         t = 0;
         while (r === cr) r = randint(0, pics.length - 1);
