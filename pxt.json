@@ -9,7 +9,8 @@
         "api.ts",
         "main.blocks",
         "main.ts",
-        "README.md"
+        "README.md",
+        "api.d.ts"
     ],
     "testFiles": [
         "assets.json",

@@ -17,8 +17,7 @@ namespace helpers {
 CC 44 EE 66
 33 BB 11 99
 DD 55 FF 77
-`
-
+`;
     const BAYER8X8_DATA: Buffer = hex`
 00 C2 33 F2 0E CE 3F FF
 82 43 B2 73 8E 4F BE 7F
@@ -29,7 +28,6 @@ A2 63 92 53 AE 6F 9E 5F
 2A EB 1A DB 26 E7 16 D7
 AA 6A 9A 5B A6 66 96 57
 `;
-
     const BAYER16X16_DATA: Buffer = hex`
 00 80 20 A0 08 88 28 A8 02 82 22 A2 0A 8A 2A AA
 C0 40 E0 60 C8 48 E8 68 C2 42 E2 62 CA 4A EA 6A
@@ -47,7 +45,7 @@ F3 73 D3 53 FB 7B DB 5B F1 71 D1 51 F9 79 D9 59
 CF 4F EF 6F C7 47 E7 67 CD 4D ED 6D C5 45 E5 65
 3F BF 1F 9F 37 B7 17 97 3D BD 1D 9D 35 B5 15 95
 FF 7F DF 5F F7 77 D7 57 FD 7D DD 5D F5 75 D5 55
-`
+`;
     // bayer_drawcore
     // - bayer_drawcore's init (section.data like)
     let bx: number = 0x0, by: number = 0x0, b: number = 0x0, bs: number = 0x0;
@@ -57,7 +55,7 @@ FF 7F DF 5F F7 77 D7 57 FD 7D DD 5D F5 75 D5 55
     const local_math_clamp = Math.clamp, local_math_abs = Math.abs,
     local_neg_abs = (n: number) => { if (n >= 0) return 0; return local_math_abs(n); };
     // end bayer_drawcore
-    let bayer_drawcore = (to: Image, from: Image, x: number, y: number, opacity: number, transparent?: boolean) => {
+    const bayer_drawcore = (to: Image, from: Image, x: number, y: number, opacity: number, transparent?: boolean): void => {
         //if (!from || !to) return;
         if (opacity >= 0xff) {
             if (transparent) to.drawTransparentImage(from, x, y);
@@ -90,9 +88,8 @@ FF 7F DF 5F F7 77 D7 57 FD 7D DD 5D F5 75 D5 55
         }
     }
 
-    let imageBayer = (to: Image, from: Image, x: number, y: number, opacity: number, level?: image.BayerSize, transparent?: boolean) => {
+    const imageBayer = (to: Image, from: Image, x: number, y: number, opacity: number, level?: image.BayerSize, transparent?: boolean): void => {
         if (!to || !from) return;
-        // if (from.equals(image.create(from.width, from.height))) return; // optional
         switch (level) {
             case image.BayerSize.x4: if (bn === image.BayerSize.x4) break;
                 curBayer = BAYER4X4_DATA; bn = 0x3; break;
@@ -104,36 +101,12 @@ FF 7F DF 5F F7 77 D7 57 FD 7D DD 5D F5 75 D5 55
         bayer_drawcore(to, from, x|0, y|0, opacity&0xff, transparent);
     }
 
-    export function imageDrawBayerImage(to: Image, from: Image, x: number, y: number, opacity: number, level?: image.BayerSize) {
+    export function imageDrawBayerImage(to: Image, from: Image, x: number, y: number, opacity: number, level?: image.BayerSize): void {
         imageBayer(to, from, x, y, opacity, level, true);
     }
 
-    export function imageDrawOpaqueBayerImage(to: Image, from: Image, x: number, y: number, opacity: number, level?: image.BayerSize) {
+    export function imageDrawOpaqueBayerImage(to: Image, from: Image, x: number, y: number, opacity: number, level?: image.BayerSize): void {
         imageBayer(to, from, x, y, opacity, level, false);
     }
     
-}
-
-interface Image {
-
-    /**
-     * Draw image with pseudo-opacity(0-255) into current image
-     * @param source image
-     * @param draw to current image
-     * @param x position of dist image
-     * @param y position of dist image
-     * @param opacity as 0-255 for pseudo-opacity
-     * @param precomputed bayer-matrix size as enum
-     */
-    //% blockId=image_draw_opacity_bayer
-    //% block="$this=image_picker draw matrix $from=image_picker at x $x y $y opacity $opacity|| from $level"
-    //% opacity.min=0 opacity.max=255 opacity.defl="128"
-    //% blockNamespace=images
-    //% inlineInputMode=inline
-    //% group=Drawing
-    //% helper=imageDrawBayerImage
-    drawBayerImage(from: Image, x: number, y: number, opacity: number, level?: image.BayerSize): void;
-
-    //% helper=imageDrawOpaqueBayerImage
-    drawOpaqueBayerImage(from: Image, x: number, y: number, opacity: number, level?: image.BayerSize): void;
 }
