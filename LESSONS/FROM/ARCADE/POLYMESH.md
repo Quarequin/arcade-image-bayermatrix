@@ -24,7 +24,7 @@ The failure wasn't that AI was used — it was that AI was used to generate *con
 
 > Use AI for **data**, not for **structure**.
 
-For arcade-image-bayermatrix, the Bayer matrix constants were sourced from an LLM (Gemini) — a lookup table has exactly one correct answer for a given matrix size, so there's nothing to "review" beyond checking the numbers. Every part of the extension that decides *how a sprite gets drawn* — buffer layout, threshold comparisons, draw-order — was written and optimized by hand.
+For arcade-image-bayermatrix, the Bayer matrix constants were sourced from LLM (Gemini) <del>like ai-generated constant</del> — a lookup table has exactly one correct answer for a given matrix size, so there's nothing to "review" beyond checking the numbers. Every part of the extension that decides *how a sprite gets drawn* — buffer layout, threshold comparisons, draw-order — was written and optimized by hand.
 
 But polymesh's failure wasn't only about *where* the AI code came from — it was about the **shape** the code took once it existed: classes, instances, inheritance. So the second decision follows from the first: don't just keep structure human-written, keep the structure itself simple enough that a human *can* review it in one pass.
 
