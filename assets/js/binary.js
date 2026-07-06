@@ -1,4 +1,4 @@
-// meta={"simUrl":"https://trg-arcade.userpxt.io/v4.0.14/---simulator","cdnUrl":"https://cdn.makecode.com","version":"0.0.19","target":"arcade","targetVersion":"4.0.14","repo":"quarequin/arcade-image-bayermatrix"}
+// meta={"simUrl":"https://trg-arcade.userpxt.io/v4.0.14/---simulator","cdnUrl":"https://cdn.makecode.com","version":"0.0.20","target":"arcade","targetVersion":"4.0.14","repo":"quarequin/arcade-image-bayermatrix"}
 // total=1903713 new=3.61% cached=61.67% other=34.72%
 (function (ectx) {
 'use strict';
@@ -482,7 +482,7 @@ const pxsim_pxtrt = pxsim.pxtrt;
 const pxsim_numops = pxsim.numops;
 
 
-function _main___P21719(s) {
+function _main___P21736(s) {
 let r0 = s.r0, step = s.pc;
 s.pc = -1;
 
@@ -1013,13 +1013,13 @@ switch (step) {
     return leave(s, r0)
   default: oops()
 } } }
-_main___P21719.info = {"start":0,"length":0,"line":0,"column":0,"endLine":0,"endColumn":0,"fileName":"main.ts","functionName":"<main>","argumentNames":[]}
-_main___P21719.continuations = [  ]
+_main___P21736.info = {"start":0,"length":0,"line":0,"column":0,"endLine":0,"endColumn":0,"fileName":"main.ts","functionName":"<main>","argumentNames":[]}
+_main___P21736.continuations = [  ]
 
-function _main___P21719_mk(s) {
+function _main___P21736_mk(s) {
     checkStack(s.depth);
     return {
-        parent: s, fn: _main___P21719, depth: s.depth + 1,
+        parent: s, fn: _main___P21736, depth: s.depth + 1,
         pc: 0, retval: undefined, r0: undefined, overwrittenPC: false, lambdaArgs: null,
   tmp_0: undefined,
   tmp_1: undefined,
@@ -45075,5 +45075,5 @@ const sprites_BaseSpriteSayRenderer__C2276_VT = mkVTable({
 
 const breakpoints = setupDebugger(1, ["BAYER4X4_DATA___7019","BAYER8X8_DATA___7022","BAYER16X16_DATA___7025","frowBuf___7040","trowBuf___7043","curBayer___7046","local_math_clamp___7052","local_math_abs___7054","local_neg_abs___7056","paused___21605","pics___21620","r___21640","cr___21646","pic___21648","t___21652","bn___7050","bs___7034","ibx___7036","bx___7028","iby___7038","by___7030","b___7032"])
 
-return _main___P21719
+return _main___P21736
 })
