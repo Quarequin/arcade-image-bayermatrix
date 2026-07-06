@@ -94,9 +94,10 @@ FF 7F DF 5F F7 77 D7 57 FD 7D DD 5D F5 75 D5 55
                 if (iby + y < 0) continue;
                 if (iby + y >= trowBuf.length) break;
                 if (transparent && !frowBuf[iby]) continue;
-                if (trowBuf[iby + y] === frowBuf[iby]) continue;
-                by = (iby + y) & bn; b = curBayer[bx + Math.imul(by, bs)];
-                switch (opacity >= b) { case true: trowBuf[iby + y] = frowBuf[iby]; }
+                switch (trowBuf[iby + y] === frowBuf[iby]) { case false:
+                    by = (iby + y) & bn; b = curBayer[bx + Math.imul(by, bs)];
+                    if (opacity >= b) trowBuf[iby + y] = frowBuf[iby];
+                }
             }
             to.setRows(ibx + x, trowBuf);
         }
