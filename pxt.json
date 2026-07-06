@@ -7,10 +7,10 @@
     },
     "files": [
         "api.ts",
+        "api.d.ts",
         "main.blocks",
         "main.ts",
-        "README.md",
-        "api.d.ts"
+        "README.md"
     ],
     "testFiles": [
         "assets.json",
