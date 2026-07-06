@@ -1,4 +1,4 @@
-// meta={"simUrl":"https://trg-arcade.userpxt.io/v4.0.14/---simulator","cdnUrl":"https://cdn.makecode.com","version":"0.0.16","target":"arcade","targetVersion":"4.0.14","repo":"quarequin/arcade-image-bayermatrix"}
+// meta={"simUrl":"https://trg-arcade.userpxt.io/v4.0.14/---simulator","cdnUrl":"https://cdn.makecode.com","version":"0.0.17","target":"arcade","targetVersion":"4.0.14","repo":"quarequin/arcade-image-bayermatrix"}
 // total=1901653 new=3.51% cached=61.73% other=34.76%
 (function (ectx) {
 'use strict';
@@ -482,7 +482,7 @@ const pxsim_pxtrt = pxsim.pxtrt;
 const pxsim_numops = pxsim.numops;
 
 
-function _main___P19230(s) {
+function _main___P19247(s) {
 let r0 = s.r0, step = s.pc;
 s.pc = -1;
 
@@ -1003,13 +1003,13 @@ switch (step) {
     return leave(s, r0)
   default: oops()
 } } }
-_main___P19230.info = {"start":0,"length":0,"line":0,"column":0,"endLine":0,"endColumn":0,"fileName":"main.ts","functionName":"<main>","argumentNames":[]}
-_main___P19230.continuations = [  ]
+_main___P19247.info = {"start":0,"length":0,"line":0,"column":0,"endLine":0,"endColumn":0,"fileName":"main.ts","functionName":"<main>","argumentNames":[]}
+_main___P19247.continuations = [  ]
 
-function _main___P19230_mk(s) {
+function _main___P19247_mk(s) {
     checkStack(s.depth);
     return {
-        parent: s, fn: _main___P19230, depth: s.depth + 1,
+        parent: s, fn: _main___P19247, depth: s.depth + 1,
         pc: 0, retval: undefined, r0: undefined, overwrittenPC: false, lambdaArgs: null,
   tmp_0: undefined,
   tmp_1: undefined,
@@ -45011,5 +45011,5 @@ const sprites_BaseSpriteSayRenderer__C2276_VT = mkVTable({
 
 const breakpoints = setupDebugger(1, ["BAYER4X4_DATA___7013","BAYER8X8_DATA___7016","BAYER16X16_DATA___7019","frowBuf___7030","trowBuf___7033","curBayer___7036","local_math_clamp___7042","local_math_abs___7044","local_neg_abs___7046","pics___4441","r___4442","cr___4443","pic___4444","t___4445","bn___7040","bs___7028","bx___7022","by___7024","b___7026"])
 
-return _main___P19230
+return _main___P19247
 })
