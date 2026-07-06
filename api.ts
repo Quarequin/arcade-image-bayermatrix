@@ -81,8 +81,8 @@ FF 7F DF 5F F7 77 D7 57 FD 7D DD 5D F5 75 D5 55
             return;
         }
         bs = bn + 1;
-        if (frowBuf.length !== from.height) frowBuf = pins.createBuffer(from.height);
-        if (trowBuf.length !== to.height) trowBuf = pins.createBuffer(to.height);
+        switch (frowBuf.length === from.height) { case false: frowBuf = pins.createBuffer(from.height); }
+        switch (trowBuf.length === to.height) { case false: trowBuf = pins.createBuffer(to.height); }
         for (ibx = local_neg_abs(x); ibx < from.width; ibx++) {
             if (ibx + x < 0) continue;
             if (ibx + x >= to.width) break;
