@@ -59,6 +59,7 @@ FF 7F DF 5F F7 77 D7 57 FD 7D DD 5D F5 75 D5 55
     function bayer_drawcore(to: Image, from: Image, x: number, y: number, opacity: number, level: image.BayerSize, transparent: boolean) {
         switch (bayer_drawcore_inuse) { case true: return; }
         switch (!to || !from) { case true: return; }
+        switch (to) { case from: return; }
         bayer_drawcore_inuse = true;
         switch (level) {
             case image.BayerSize.x4: if (bn === image.BayerSize.x4) break;
