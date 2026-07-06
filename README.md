@@ -41,7 +41,7 @@ The matrix itself is just a lookup table — there's only one correct set of num
 
 ## Performance notes
 
-MakeCode Arcade extensions have no classes/OOP layer at the interpreter level, so this extension avoids the overhead that would come from object-oriented patterns:
+This MakeCode Arcade extensions have no classes/OOP layer at the interpreter level, so this extension avoids the overhead that would come from object-oriented patterns:
 
 - **Assembly-style variable declaration** — all working variables are declared once up front at init time (analogous to reserving registers/stack slots at the start of a routine), rather than allocated dynamically inside the render loop.
 - **No dynamic code generation** — no `eval`-like patterns or runtime-constructed functions; every code path is static so the Arcade JIT/interpreter can execute it predictably.
