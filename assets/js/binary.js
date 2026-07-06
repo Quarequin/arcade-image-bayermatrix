@@ -1,4 +1,4 @@
-// meta={"simUrl":"https://trg-arcade.userpxt.io/v4.0.14/---simulator","cdnUrl":"https://cdn.makecode.com","version":"0.0.15","target":"arcade","targetVersion":"4.0.14","repo":"quarequin/arcade-image-bayermatrix"}
+// meta={"simUrl":"https://trg-arcade.userpxt.io/v4.0.14/---simulator","cdnUrl":"https://cdn.makecode.com","version":"0.0.16","target":"arcade","targetVersion":"4.0.14","repo":"quarequin/arcade-image-bayermatrix"}
 // total=1901653 new=3.51% cached=61.73% other=34.76%
 (function (ectx) {
 'use strict';
