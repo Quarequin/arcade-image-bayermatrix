@@ -38,8 +38,11 @@ CF 4F EF 6F C7 47 E7 67 CD 4D ED 6D C5 45 E5 65
 FF 7F DF 5F F7 77 D7 57 FD 7D DD 5D F5 75 D5 55
 `
     export enum bayerLevel {
+        //% block="bayer 4x4"
         x4  = 0x4,
+        //% block="bayer 8x8"
         x8  = 0x8,
+        //% block="bayer 16x16"
         x16 = 0xF,
     }
     // bayer_drawcore
@@ -51,13 +54,13 @@ FF 7F DF 5F F7 77 D7 57 FD 7D DD 5D F5 75 D5 55
     const local_math_clamp = Math.clamp, local_math_abs = Math.abs,
     local_neg_abs = (n: number) => { if (n >= 0) return 0; return local_math_abs(n); };
     // end bayer_drawcore
-    function bayer_drawcore(from: Image, to: Image, x: number, y: number, opacity: number) {
-        if (!from || !to) return;
+    function bayer_drawcore(to: Image, from: Image, x: number, y: number, opacity: number) {
+        //if (!from || !to) return;
         if (opacity >= 0xff) {
             to.drawTransparentImage(from, x, y);
             return;
         } else if (opacity <= 0x00) return;
-        opacity = local_math_clamp(0x00, 0xff, opacity); bs = bn + 1;
+        bs = bn + 1;
         if (frowBuf.length !== from.height) frowBuf = pins.createBuffer(from.height);
         if (trowBuf.length !== to.height) trowBuf = pins.createBuffer(to.height);
         for (let ix = local_neg_abs(x); ix < from.width; ix++) {
@@ -80,7 +83,24 @@ FF 7F DF 5F F7 77 D7 57 FD 7D DD 5D F5 75 D5 55
         }
     }
 
-    export function bayer(from: Image, to: Image, x: number, y: number, opacity: number, level?: bayerLevel) {
+    /**
+     * Draw image with pseudo-opacity(0-255) into current image
+     * @param source image
+     * @param draw to current image
+     * @param x position of dist image
+     * @param y position of dist image
+     * @param opacity as 0-255 for pseudo-opacity
+     * @param precomputed bayer-matrix size as enum
+     */
+    //% blockId=image_draw_opacity_bayer
+    //% block="$to=image_picker draw matrix $from=image_picker at x $x y $y opacity $opacity|| from $level"
+    //% opacity.min=0 opacity.max=255 opacity.defl="128"
+    //% blockNamespace=images
+    //% inlineInputMode=inline
+    //% group=Drawing
+    export function bayer(to: Image, from: Image, x: number, y: number, opacity: number, level?: bayerLevel) {
+        if (!to || !from) return;
+        // if (from.equals(image.create(from.width, from.height))) return; // optional
         switch (level) {
             case bayerLevel.x4: if (bn === bayerLevel.x4) break;
                 curBayer = BAYER4X4_DATA; bn = 0x3; break;
@@ -89,7 +109,7 @@ FF 7F DF 5F F7 77 D7 57 FD 7D DD 5D F5 75 D5 55
             case bayerLevel.x16: if (bn === bayerLevel.x16) break;
                 curBayer = BAYER16X16_DATA; bn = 0xF; break;
         }
-        bayer_drawcore(from, to, x|0, y|0, opacity|0);
+        bayer_drawcore(to, from, x|0, y|0, opacity&0xff);
     }
     
 }

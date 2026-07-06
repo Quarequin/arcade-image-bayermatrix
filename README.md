@@ -54,7 +54,7 @@ Together these keep the pseudo-opacity effect close to zero-allocation per frame
 ```typescript
 let picture = image.create(80,60).fill(1)
 // example: draw a picture with ~50% pseudo-opacity to background
-image.bayer(picture, scene.backgroundImage(), 40, 30, 128, image.bayerLevel.x8) // 0 = fully transparent, 255 = fully opaque
+image.bayer(scene.backgroundImage(), picture, 40, 30, 128, image.bayerLevel.x8) // 0 = fully transparent, 255 = fully opaque
 ```
 
 > Add real usage snippets here once the public API in `api.ts` is finalized.
