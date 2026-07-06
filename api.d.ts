@@ -13,7 +13,7 @@ interface Image {
      */
     //% blockNamespace=images inlineInputMode=inline blockId=image_draw_opacity_bayer
     //% block="%this=variables_get draw matrix %from=image_picker at x %x y %y opacity $opacity|| from %level"
-    //% group=Drawing
+    //% group=Drawing weight=80
     //% opacity.min=0 opacity.max=255 opacity.defl="128"
     //% this.defl=picture
     //% helper=imageDrawBayerImage
