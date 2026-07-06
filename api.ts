@@ -1,5 +1,16 @@
 
 namespace image {
+    export enum BayerSize {
+        //% block="bayer 4x4"
+        x4 = 0x0,
+        //% block="bayer 8x8"
+        x8 = 0x1,
+        //% block="bayer 16x16"
+        x16 = 0x2,
+    }
+}
+
+namespace helpers {
 
     const BAYER4X4_DATA: Buffer = hex`
 00 88 22 AA
@@ -37,14 +48,6 @@ CF 4F EF 6F C7 47 E7 67 CD 4D ED 6D C5 45 E5 65
 3F BF 1F 9F 37 B7 17 97 3D BD 1D 9D 35 B5 15 95
 FF 7F DF 5F F7 77 D7 57 FD 7D DD 5D F5 75 D5 55
 `
-    export enum bayerLevel {
-        //% block="bayer 4x4"
-        x4  = 0x4,
-        //% block="bayer 8x8"
-        x8  = 0x8,
-        //% block="bayer 16x16"
-        x16 = 0xF,
-    }
     // bayer_drawcore
     // - bayer_drawcore's init (section.data like)
     let bx: number = 0x0, by: number = 0x0, b: number = 0x0, bs: number = 0x0;
@@ -54,12 +57,16 @@ FF 7F DF 5F F7 77 D7 57 FD 7D DD 5D F5 75 D5 55
     const local_math_clamp = Math.clamp, local_math_abs = Math.abs,
     local_neg_abs = (n: number) => { if (n >= 0) return 0; return local_math_abs(n); };
     // end bayer_drawcore
-    function bayer_drawcore(to: Image, from: Image, x: number, y: number, opacity: number) {
+    let bayer_drawcore = (to: Image, from: Image, x: number, y: number, opacity: number, transparent?: boolean) => {
         //if (!from || !to) return;
         if (opacity >= 0xff) {
-            to.drawTransparentImage(from, x, y);
+            if (transparent) to.drawTransparentImage(from, x, y);
+            else to.drawImage(from, x, y)
             return;
-        } else if (opacity <= 0x00) return;
+        } else if (opacity <= 0x00) {
+            if (!transparent) to.fillRect(x, y, from.width, from.height, 0);
+            return;
+        }
         bs = bn + 1;
         if (frowBuf.length !== from.height) frowBuf = pins.createBuffer(from.height);
         if (trowBuf.length !== to.height) trowBuf = pins.createBuffer(to.height);
@@ -72,7 +79,7 @@ FF 7F DF 5F F7 77 D7 57 FD 7D DD 5D F5 75 D5 55
             for (let iy = local_neg_abs(y); iy < frowBuf.length; iy++) {
                 if (iy + y < 0) continue;
                 if (iy + y >= trowBuf.length) break;
-                if (!frowBuf[iy]) continue;
+                if (transparent && !frowBuf[iy]) continue;
                 if (trowBuf[iy + y] === frowBuf[iy]) continue;
                 by = (iy + y) & bn;
                 b = curBayer[bx + Math.imul(by, bs)];
@@ -82,6 +89,32 @@ FF 7F DF 5F F7 77 D7 57 FD 7D DD 5D F5 75 D5 55
             to.setRows(ix + x, trowBuf);
         }
     }
+
+    let imageBayer = (to: Image, from: Image, x: number, y: number, opacity: number, level?: image.BayerSize, transparent?: boolean) => {
+        if (!to || !from) return;
+        // if (from.equals(image.create(from.width, from.height))) return; // optional
+        switch (level) {
+            case image.BayerSize.x4: if (bn === image.BayerSize.x4) break;
+                curBayer = BAYER4X4_DATA; bn = 0x3; break;
+            case image.BayerSize.x8: default: if (bn === image.BayerSize.x8) break;
+                curBayer = BAYER8X8_DATA; bn = 0x7; break;
+            case image.BayerSize.x16: if (bn === image.BayerSize.x16) break;
+                curBayer = BAYER16X16_DATA; bn = 0xF; break;
+        }
+        bayer_drawcore(to, from, x|0, y|0, opacity&0xff, transparent);
+    }
+
+    export function imageDrawBayerImage(to: Image, from: Image, x: number, y: number, opacity: number, level?: image.BayerSize) {
+        imageBayer(to, from, x, y, opacity, level, true);
+    }
+
+    export function imageDrawOpaqueBayerImage(to: Image, from: Image, x: number, y: number, opacity: number, level?: image.BayerSize) {
+        imageBayer(to, from, x, y, opacity, level, false);
+    }
+    
+}
+
+interface Image {
 
     /**
      * Draw image with pseudo-opacity(0-255) into current image
@@ -93,23 +126,14 @@ FF 7F DF 5F F7 77 D7 57 FD 7D DD 5D F5 75 D5 55
      * @param precomputed bayer-matrix size as enum
      */
     //% blockId=image_draw_opacity_bayer
-    //% block="$to=image_picker draw matrix $from=image_picker at x $x y $y opacity $opacity|| from $level"
+    //% block="$this=image_picker draw matrix $from=image_picker at x $x y $y opacity $opacity|| from $level"
     //% opacity.min=0 opacity.max=255 opacity.defl="128"
     //% blockNamespace=images
     //% inlineInputMode=inline
     //% group=Drawing
-    export function bayer(to: Image, from: Image, x: number, y: number, opacity: number, level?: bayerLevel) {
-        if (!to || !from) return;
-        // if (from.equals(image.create(from.width, from.height))) return; // optional
-        switch (level) {
-            case bayerLevel.x4: if (bn === bayerLevel.x4) break;
-                curBayer = BAYER4X4_DATA; bn = 0x3; break;
-            case bayerLevel.x8: default: if (bn === bayerLevel.x8) break;
-                curBayer = BAYER8X8_DATA; bn = 0x7; break;
-            case bayerLevel.x16: if (bn === bayerLevel.x16) break;
-                curBayer = BAYER16X16_DATA; bn = 0xF; break;
-        }
-        bayer_drawcore(to, from, x|0, y|0, opacity&0xff);
-    }
-    
+    //% helper=imageDrawBayerImage
+    drawBayerImage(from: Image, x: number, y: number, opacity: number, level?: image.BayerSize): void;
+
+    //% helper=imageDrawOpaqueBayerImage
+    drawOpaqueBayerImage(from: Image, x: number, y: number, opacity: number, level?: image.BayerSize): void;
 }
