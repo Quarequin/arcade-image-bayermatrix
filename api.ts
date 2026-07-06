@@ -72,12 +72,12 @@ FF 7F DF 5F F7 77 D7 57 FD 7D DD 5D F5 75 D5 55
         x = x|0, y = y|0, opacity = opacity&0xff;
         switch (opacity) {
             case 0xff:
-            switch (transparent) { case true: to.drawTransparentImage(from, x, y); break;
-            case false: default: to.drawImage(from, x, y); }
+            if (transparent) to.drawTransparentImage(from, x, y);
+            else to.drawImage(from, x, y);
             bayer_drawcore_inuse = false;
             return;
             case 0x00:
-            switch (transparent) { case false: to.fillRect(x, y, from.width, from.height, 0); break; }
+            if (!transparent) to.fillRect(x, y, from.width, from.height, 0x0);
             bayer_drawcore_inuse = false;
             return;
         }
@@ -95,8 +95,7 @@ FF 7F DF 5F F7 77 D7 57 FD 7D DD 5D F5 75 D5 55
                 if (iby + y >= trowBuf.length) break;
                 if (transparent && !frowBuf[iby]) continue;
                 if (trowBuf[iby + y] === frowBuf[iby]) continue;
-                by = (iby + y) & bn;
-                b = curBayer[bx + Math.imul(by, bs)];
+                by = (iby + y) & bn; b = curBayer[bx + Math.imul(by, bs)];
                 switch (opacity >= b) { case true: trowBuf[iby + y] = frowBuf[iby]; }
             }
             to.setRows(ibx + x, trowBuf);
