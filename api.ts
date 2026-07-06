@@ -43,11 +43,11 @@ FF 7F DF 5F F7 77 D7 57 FD 7D DD 5D F5 75 D5 55
         x16 = 0xF,
     }
     // bayer_drawcore
-    //   bayer_drawcore's init (section.data like)
+    // - bayer_drawcore's init (section.data like)
     let bx: number = 0x0, by: number = 0x0, b: number = 0x0, bs: number = 0x0;
     let frowBuf: Buffer = hex``, trowBuf: Buffer = hex``;
     let curBayer: Buffer = hex``, bn: number = -1;
-    //   reuse function (not makecode arcade bulit-in function)
+    // - reuse function (not makecode arcade bulit-in function)
     let local_math_clamp = Math.clamp, local_math_abs = Math.abs,
     local_neg_abs = (n: number) => { if (n >= 0) return 0; return local_math_abs(n); };
     // end bayer_drawcore
@@ -72,8 +72,9 @@ FF 7F DF 5F F7 77 D7 57 FD 7D DD 5D F5 75 D5 55
                 if (!frowBuf[iy]) continue;
                 if (trowBuf[iy + y] === frowBuf[iy]) continue;
                 by = (iy + y) & bn;
-                b = curBayer[bx + by * bs];
-                if (opacity >= b) trowBuf[iy + y] = frowBuf[iy];
+                b = curBayer[bx + Math.imul(by, bs)];
+                if (opacity < b) continue;
+                trowBuf[iy + y] = frowBuf[iy];
             }
             to.setRows(ix + x, trowBuf);
         }

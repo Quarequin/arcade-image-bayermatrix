@@ -495,10 +495,11 @@ let pics = [
 let r = randint(0, pics.length - 1), cr = r; let pic = pics[r]; let t = 0;
 forever(() => {
     image.bayer(pic, scene.backgroundImage(), 0, 0, t, 0xF)
-    if ((t & 0xff) > ((t + 1) & 0xff)) {
+    if ((t & 0xff) > ((t + 0x1) & 0xff)) {
+        // image.bayer(pic, scene.backgroundImage(), 0, 0, 0xff, 0xF);
         t = 0;
         while (r === cr) r = randint(0, pics.length - 1);
         cr = r;
         pic = pics[cr];
-    } else t++;
+    } else t+=0x1;
 })
