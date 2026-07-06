@@ -55,8 +55,17 @@ FF 7F DF 5F F7 77 D7 57 FD 7D DD 5D F5 75 D5 55
     const local_math_clamp = Math.clamp, local_math_abs = Math.abs,
     local_neg_abs = (n: number) => { if (n >= 0) return 0; return local_math_abs(n); };
     // end bayer_drawcore
-    const bayer_drawcore = (to: Image, from: Image, x: number, y: number, opacity: number, transparent?: boolean): void => {
-        //if (!from || !to) return;
+    function bayer_drawcore(to: Image, from: Image, x: number, y: number, opacity: number, level: image.BayerSize, transparent: boolean) {
+        if (!to || !from) return;
+        switch (level) {
+            case image.BayerSize.x4: if (bn === image.BayerSize.x4) break;
+                curBayer = BAYER4X4_DATA; bn = 0x3; break;
+            case image.BayerSize.x8: default: if (bn === image.BayerSize.x8) break;
+                curBayer = BAYER8X8_DATA; bn = 0x7; break;
+            case image.BayerSize.x16: if (bn === image.BayerSize.x16) break;
+                curBayer = BAYER16X16_DATA; bn = 0xF; break;
+        }
+        x = x|0, y = y|0, opacity = opacity&0xff;
         if (opacity >= 0xff) {
             if (transparent) to.drawTransparentImage(from, x, y);
             else to.drawImage(from, x, y)
@@ -88,25 +97,12 @@ FF 7F DF 5F F7 77 D7 57 FD 7D DD 5D F5 75 D5 55
         }
     }
 
-    const imageBayer = (to: Image, from: Image, x: number, y: number, opacity: number, level?: image.BayerSize, transparent?: boolean): void => {
-        if (!to || !from) return;
-        switch (level) {
-            case image.BayerSize.x4: if (bn === image.BayerSize.x4) break;
-                curBayer = BAYER4X4_DATA; bn = 0x3; break;
-            case image.BayerSize.x8: default: if (bn === image.BayerSize.x8) break;
-                curBayer = BAYER8X8_DATA; bn = 0x7; break;
-            case image.BayerSize.x16: if (bn === image.BayerSize.x16) break;
-                curBayer = BAYER16X16_DATA; bn = 0xF; break;
-        }
-        bayer_drawcore(to, from, x|0, y|0, opacity&0xff, transparent);
-    }
-
     export function imageDrawBayerImage(to: Image, from: Image, x: number, y: number, opacity: number, level?: image.BayerSize): void {
-        imageBayer(to, from, x, y, opacity, level, true);
+        bayer_drawcore(to, from, x, y, opacity, level, true);
     }
 
     export function imageDrawOpaqueBayerImage(to: Image, from: Image, x: number, y: number, opacity: number, level?: image.BayerSize): void {
-        imageBayer(to, from, x, y, opacity, level, false);
+        bayer_drawcore(to, from, x, y, opacity, level, false);
     }
     
 }
