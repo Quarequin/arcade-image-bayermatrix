@@ -51,12 +51,15 @@ FF 7F DF 5F F7 77 D7 57 FD 7D DD 5D F5 75 D5 55
     let bx: number = 0x0, by: number = 0x0, b: number = 0x0, bs: number = 0x0, ibx: number = 0x0, iby: number = 0x0;
     let frowBuf: Buffer = hex``, trowBuf: Buffer = hex``;
     let curBayer: Buffer = hex``, bn: number = -1;
+    let bayer_drawcore_inuse = false;
     // - reused function (not referense from makecode arcade bulit-in function)
-    const local_math_clamp = Math.clamp, local_math_abs = Math.abs,
+    const local_math_abs = Math.abs,
     local_neg_abs = (n: number) => { if (n >= 0) return 0; return local_math_abs(n); };
     // end bayer_drawcore
     function bayer_drawcore(to: Image, from: Image, x: number, y: number, opacity: number, level: image.BayerSize, transparent: boolean) {
-        if (!to || !from) return;
+        switch (bayer_drawcore_inuse) { case true: return; }
+        switch (!to || !from) { case true: return; }
+        bayer_drawcore_inuse = true;
         switch (level) {
             case image.BayerSize.x4: if (bn === image.BayerSize.x4) break;
                 curBayer = BAYER4X4_DATA; bn = 0x3; break;
@@ -68,11 +71,13 @@ FF 7F DF 5F F7 77 D7 57 FD 7D DD 5D F5 75 D5 55
         x = x|0, y = y|0, opacity = opacity&0xff;
         switch (opacity) {
             case 0xff:
-            switch (transparent) { case true: to.drawTransparentImage(from, x, y); return; }
-            to.drawImage(from, x, y);
+            switch (transparent) { case true: to.drawTransparentImage(from, x, y); break;
+            case false: default: to.drawImage(from, x, y); }
+            bayer_drawcore_inuse = false;
             return;
             case 0x00:
-            switch (transparent) { case false: to.fillRect(x, y, from.width, from.height, 0); }
+            switch (transparent) { case false: to.fillRect(x, y, from.width, from.height, 0); break; }
+            bayer_drawcore_inuse = false;
             return;
         }
         bs = bn + 1;
@@ -91,11 +96,11 @@ FF 7F DF 5F F7 77 D7 57 FD 7D DD 5D F5 75 D5 55
                 if (trowBuf[iby + y] === frowBuf[iby]) continue;
                 by = (iby + y) & bn;
                 b = curBayer[bx + Math.imul(by, bs)];
-                if (opacity < b) continue;
-                trowBuf[iby + y] = frowBuf[iby];
+                switch (opacity >= b) { case true: trowBuf[iby + y] = frowBuf[iby]; }
             }
             to.setRows(ibx + x, trowBuf);
         }
+        bayer_drawcore_inuse = false;
     }
 
     export function imageDrawBayerImage(to: Image, from: Image, x: number, y: number, opacity: number, level: image.BayerSize): void {
