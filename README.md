@@ -83,4 +83,4 @@ See [LICENSE](LICENSE.txt).
 
 * for PXT/arcade
 
-[LESSONS-FROM-ARCADE-POLYMESH](.0/.0/.0/.0/LESSONS-FROM-ARCADE-POLYMESH.md)
+[LESSONS-FROM-ARCADE-POLYMESH](https://github.com/Quarequin/arcade-image-bayermatrix/.0/.0/.0/.0/LESSONS-FROM-ARCADE-POLYMESH.md)
