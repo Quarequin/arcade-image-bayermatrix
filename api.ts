@@ -48,7 +48,7 @@ FF 7F DF 5F F7 77 D7 57 FD 7D DD 5D F5 75 D5 55
     let frowBuf: Buffer = hex``, trowBuf: Buffer = hex``;
     let curBayer: Buffer = hex``, bn: number = -1;
     // - reuse function (not makecode arcade bulit-in function)
-    let local_math_clamp = Math.clamp, local_math_abs = Math.abs,
+    const local_math_clamp = Math.clamp, local_math_abs = Math.abs,
     local_neg_abs = (n: number) => { if (n >= 0) return 0; return local_math_abs(n); };
     // end bayer_drawcore
     function bayer_drawcore(from: Image, to: Image, x: number, y: number, opacity: number) {
