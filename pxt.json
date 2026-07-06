@@ -9,10 +9,12 @@
         "api.ts",
         "main.blocks",
         "main.ts",
-        "README.md",
-        "assets.json"
+        "README.md"
     ],
     "testFiles": [
+        "assets.json",
+        "images.g.jres",
+        "images.g.ts",
         "test.ts"
     ],
     "targetVersions": {
