@@ -31,3 +31,5 @@ forever(() => {
         pic = pics[cr];
     } else t+=0x1;
 })
+
+// end test
