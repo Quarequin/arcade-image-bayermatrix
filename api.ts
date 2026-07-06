@@ -66,12 +66,13 @@ FF 7F DF 5F F7 77 D7 57 FD 7D DD 5D F5 75 D5 55
                 curBayer = BAYER16X16_DATA; bn = 0xF; break;
         }
         x = x|0, y = y|0, opacity = opacity&0xff;
-        if (opacity >= 0xff) {
-            if (transparent) to.drawTransparentImage(from, x, y);
-            else to.drawImage(from, x, y)
+        switch (opacity) {
+            case 0xff:
+            switch (transparent) { case true: to.drawTransparentImage(from, x, y); return; }
+            to.drawImage(from, x, y);
             return;
-        } else if (opacity <= 0x00) {
-            if (!transparent) to.fillRect(x, y, from.width, from.height, 0);
+            case 0x00:
+            switch (transparent) { case false: to.fillRect(x, y, from.width, from.height, 0); }
             return;
         }
         bs = bn + 1;
@@ -97,11 +98,11 @@ FF 7F DF 5F F7 77 D7 57 FD 7D DD 5D F5 75 D5 55
         }
     }
 
-    export function imageDrawBayerImage(to: Image, from: Image, x: number, y: number, opacity: number, level?: image.BayerSize): void {
+    export function imageDrawBayerImage(to: Image, from: Image, x: number, y: number, opacity: number, level: image.BayerSize): void {
         bayer_drawcore(to, from, x, y, opacity, level, true);
     }
 
-    export function imageDrawOpaqueBayerImage(to: Image, from: Image, x: number, y: number, opacity: number, level?: image.BayerSize): void {
+    export function imageDrawOpaqueBayerImage(to: Image, from: Image, x: number, y: number, opacity: number, level: image.BayerSize): void {
         bayer_drawcore(to, from, x, y, opacity, level, false);
     }
     
