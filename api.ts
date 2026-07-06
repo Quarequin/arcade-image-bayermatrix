@@ -2,11 +2,11 @@
 namespace image {
     export enum BayerSize {
         //% block="bayer 4x4"
-        x4 = 0x0,
+        x4 = 0x3,
         //% block="bayer 8x8"
-        x8 = 0x1,
+        x8 = 0x7,
         //% block="bayer 16x16"
-        x16 = 0x2,
+        x16 = 0xf,
     }
 }
 
@@ -48,10 +48,10 @@ FF 7F DF 5F F7 77 D7 57 FD 7D DD 5D F5 75 D5 55
 `;
     // bayer_drawcore
     // - bayer_drawcore's init (section.data like)
-    let bx: number = 0x0, by: number = 0x0, b: number = 0x0, bs: number = 0x0;
+    let bx: number = 0x0, by: number = 0x0, b: number = 0x0, bs: number = 0x0, ibx: number = 0x0, iby: number = 0x0;
     let frowBuf: Buffer = hex``, trowBuf: Buffer = hex``;
     let curBayer: Buffer = hex``, bn: number = -1;
-    // - reuse function (not makecode arcade bulit-in function)
+    // - reused function (not referense from makecode arcade bulit-in function)
     const local_math_clamp = Math.clamp, local_math_abs = Math.abs,
     local_neg_abs = (n: number) => { if (n >= 0) return 0; return local_math_abs(n); };
     // end bayer_drawcore
@@ -77,23 +77,23 @@ FF 7F DF 5F F7 77 D7 57 FD 7D DD 5D F5 75 D5 55
         bs = bn + 1;
         if (frowBuf.length !== from.height) frowBuf = pins.createBuffer(from.height);
         if (trowBuf.length !== to.height) trowBuf = pins.createBuffer(to.height);
-        for (let ix = local_neg_abs(x); ix < from.width; ix++) {
-            if (ix + x < 0) continue;
-            if (ix + x >= to.width) break;
-            from.getRows(ix, frowBuf);
-            to.getRows(ix + x, trowBuf);
-            bx = (ix + x) & bn;
-            for (let iy = local_neg_abs(y); iy < frowBuf.length; iy++) {
-                if (iy + y < 0) continue;
-                if (iy + y >= trowBuf.length) break;
-                if (transparent && !frowBuf[iy]) continue;
-                if (trowBuf[iy + y] === frowBuf[iy]) continue;
-                by = (iy + y) & bn;
+        for (ibx = local_neg_abs(x); ibx < from.width; ibx++) {
+            if (ibx + x < 0) continue;
+            if (ibx + x >= to.width) break;
+            from.getRows(ibx, frowBuf);
+            to.getRows(ibx + x, trowBuf);
+            bx = (ibx + x) & bn;
+            for (iby = local_neg_abs(y); iby < frowBuf.length; iby++) {
+                if (iby + y < 0) continue;
+                if (iby + y >= trowBuf.length) break;
+                if (transparent && !frowBuf[iby]) continue;
+                if (trowBuf[iby + y] === frowBuf[iby]) continue;
+                by = (iby + y) & bn;
                 b = curBayer[bx + Math.imul(by, bs)];
                 if (opacity < b) continue;
-                trowBuf[iy + y] = frowBuf[iy];
+                trowBuf[iby + y] = frowBuf[iby];
             }
-            to.setRows(ix + x, trowBuf);
+            to.setRows(ibx + x, trowBuf);
         }
     }
 

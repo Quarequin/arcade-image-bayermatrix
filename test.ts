@@ -1,5 +1,12 @@
 // tests go here; this will not be compiled when this package is used as an extension.
 
+let paused = 0;
+
+controller.anyButton.onEvent(ControllerButtonEvent.Pressed, () => {
+    if (!controller.menu.isPressed()) return;
+    paused = 1 - paused;
+})
+
 game.stats = true;
 
 let pics = [
@@ -14,6 +21,7 @@ let pics = [
 ];
 let r = Math.random() * (pics.length - 1) | 0, cr = r; let pic = pics[r]; let t = 0;
 forever(() => {
+    if (paused > 0) return;
     scene.backgroundImage().drawBayerImage(pic, 0, 0, t, 0xF)
     if ((t & 0xff) > ((t + 0x1) & 0xff)) {
         // image.bayer(scene.backgroundImage(), pic, 0, 0, 0xff, 0xF);
