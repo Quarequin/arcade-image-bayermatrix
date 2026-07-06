@@ -1,4 +1,4 @@
-// meta={"simUrl":"https://trg-arcade.userpxt.io/v4.0.14/---simulator","cdnUrl":"https://cdn.makecode.com","version":"0.0.18","target":"arcade","targetVersion":"4.0.14","repo":"quarequin/arcade-image-bayermatrix"}
+// meta={"simUrl":"https://trg-arcade.userpxt.io/v4.0.14/---simulator","cdnUrl":"https://cdn.makecode.com","version":"0.0.19","target":"arcade","targetVersion":"4.0.14","repo":"quarequin/arcade-image-bayermatrix"}
 // total=1903713 new=3.61% cached=61.67% other=34.72%
 (function (ectx) {
 'use strict';
@@ -482,7 +482,7 @@ const pxsim_pxtrt = pxsim.pxtrt;
 const pxsim_numops = pxsim.numops;
 
 
-function _main___P21305(s) {
+function _main___P21719(s) {
 let r0 = s.r0, step = s.pc;
 s.pc = -1;
 
@@ -922,11 +922,11 @@ switch (step) {
     s.callLocIdx = 75; s.pc = 40; return s.tmp_0;
   case 40:
     r0 = s.retval;
-    globals.paused___21174 = (0);
+    globals.paused___21605 = (0);
     s.tmp_0 = controller_Button_onEvent__P2213_mk(s);
     s.tmp_0.arg0 = globals.anyButton___2187;
     s.tmp_0.arg1 = 2049;
-    s.tmp_0.arg2 = inline__P21178;
+    s.tmp_0.arg2 = inline__P21609;
     s.callLocIdx = 76; s.pc = 41; return s.tmp_0;
   case 41:
     r0 = s.retval;
@@ -989,23 +989,23 @@ switch (step) {
     r0 = s.retval;
     s.tmp_15 = r0;
     r0 = pxsim_Array__push(s.tmp_0, s.tmp_15);
-    globals.pics___21189 = (s.tmp_0);
+    globals.pics___21620 = (s.tmp_0);
     r0 = pxsim.Math_.random();
     s.tmp_1 = r0;
-    r0 = pxsim_Array__length(globals.pics___21189);
+    r0 = pxsim_Array__length(globals.pics___21620);
     s.tmp_3 = r0;
     r0 = (s.tmp_3 - 1);
     s.tmp_2 = r0;
     r0 = (s.tmp_1 * s.tmp_2);
     s.tmp_0 = r0;
     r0 = (s.tmp_0 | 0);
-    globals.r___21209 = (r0);
-    globals.cr___21215 = (globals.r___21209);
-    r0 = pxsim_Array__getAt(globals.pics___21189, globals.r___21209);
-    globals.pic___21217 = (r0);
-    globals.t___21221 = (0);
+    globals.r___21640 = (r0);
+    globals.cr___21646 = (globals.r___21640);
+    r0 = pxsim_Array__getAt(globals.pics___21620, globals.r___21640);
+    globals.pic___21648 = (r0);
+    globals.t___21652 = (0);
     s.tmp_0 = forever__P2100_mk(s);
-    s.tmp_0.arg0 = inline__P21223;
+    s.tmp_0.arg0 = inline__P21654;
     s.callLocIdx = 87; s.pc = 50; return s.tmp_0;
   case 50:
     r0 = s.retval;
@@ -1013,13 +1013,13 @@ switch (step) {
     return leave(s, r0)
   default: oops()
 } } }
-_main___P21305.info = {"start":0,"length":0,"line":0,"column":0,"endLine":0,"endColumn":0,"fileName":"main.ts","functionName":"<main>","argumentNames":[]}
-_main___P21305.continuations = [  ]
+_main___P21719.info = {"start":0,"length":0,"line":0,"column":0,"endLine":0,"endColumn":0,"fileName":"main.ts","functionName":"<main>","argumentNames":[]}
+_main___P21719.continuations = [  ]
 
-function _main___P21305_mk(s) {
+function _main___P21719_mk(s) {
     checkStack(s.depth);
     return {
-        parent: s, fn: _main___P21305, depth: s.depth + 1,
+        parent: s, fn: _main___P21719, depth: s.depth + 1,
         pc: 0, retval: undefined, r0: undefined, overwrittenPC: false, lambdaArgs: null,
   tmp_0: undefined,
   tmp_1: undefined,
@@ -1808,7 +1808,7 @@ function myImages_inline__P7330_mk(s) {
 
 
 
-function inline__P21178(s) {
+function inline__P21609(s) {
 let r0 = s.r0, step = s.pc;
 s.pc = -1;
 
@@ -1835,19 +1835,19 @@ switch (step) {
     { step = 3; continue; }
   case 1:
   case 2:
-    r0 = (1 - globals.paused___21174);
-    globals.paused___21174 = (r0);
+    r0 = (1 - globals.paused___21605);
+    globals.paused___21605 = (r0);
   case 3:
     r0 = undefined;
     return leave(s, r0)
   default: oops()
 } } }
-inline__P21178.info = {"start":165,"length":80,"line":4,"column":60,"endLine":7,"endColumn":1,"fileName":"test.ts","functionName":"inline","argumentNames":[]}
+inline__P21609.info = {"start":165,"length":80,"line":4,"column":60,"endLine":7,"endColumn":1,"fileName":"test.ts","functionName":"inline","argumentNames":[]}
 
-function inline__P21178_mk(s) {
+function inline__P21609_mk(s) {
     checkStack(s.depth);
     return {
-        parent: s, fn: inline__P21178, depth: s.depth + 1,
+        parent: s, fn: inline__P21609, depth: s.depth + 1,
         pc: 0, retval: undefined, r0: undefined, overwrittenPC: false, lambdaArgs: null,
   tmp_0: undefined,
   tmp_1: undefined,
@@ -1858,7 +1858,7 @@ function inline__P21178_mk(s) {
 
 
 
-function inline__P21223(s) {
+function inline__P21654(s) {
 let r0 = s.r0, step = s.pc;
 s.pc = -1;
 
@@ -1868,7 +1868,7 @@ if (yieldSteps-- < 0 && maybeYield(s, step, r0) || runtime !== pxsim.runtime) re
 switch (step) {
   case 0:
 
-    r0 = (globals.paused___21174 > 0);
+    r0 = (globals.paused___21605 > 0);
     s.tmp_0 = r0;
     r0 = pxsim_numops_toBoolDecr(s.tmp_0);
     if (!r0) { step = 1; continue; }
@@ -1881,17 +1881,17 @@ switch (step) {
   case 9:
     r0 = s.retval;
     s.tmp_1.arg0 = r0;
-    s.tmp_1.arg1 = globals.pic___21217;
+    s.tmp_1.arg1 = globals.pic___21648;
     s.tmp_1.arg2 = 0;
     s.tmp_1.arg3 = 0;
-    s.tmp_1.arg4 = globals.t___21221;
+    s.tmp_1.arg4 = globals.t___21652;
     s.tmp_1.arg5 = 15;
     s.callLocIdx = 86; s.pc = 8; return s.tmp_1;
   case 8:
     r0 = s.retval;
-    r0 = (globals.t___21221 & 255);
+    r0 = (globals.t___21652 & 255);
     s.tmp_1 = r0;
-    r0 = (globals.t___21221 + 1);
+    r0 = (globals.t___21652 + 1);
     s.tmp_3 = r0;
     r0 = (s.tmp_3 & 255);
     s.tmp_2 = r0;
@@ -1899,43 +1899,43 @@ switch (step) {
     s.tmp_0 = r0;
     r0 = pxsim_numops_toBoolDecr(s.tmp_0);
     if (!r0) { step = 5; continue; }
-    globals.t___21221 = (0);
+    globals.t___21652 = (0);
   case 3:
-    r0 = (globals.r___21209 === globals.cr___21215);
+    r0 = (globals.r___21640 === globals.cr___21646);
     s.tmp_0 = r0;
     r0 = pxsim_numops_toBoolDecr(s.tmp_0);
     if (!r0) { step = 4; continue; }
     r0 = pxsim.Math_.random();
     s.tmp_2 = r0;
-    r0 = pxsim_Array__length(globals.pics___21189);
+    r0 = pxsim_Array__length(globals.pics___21620);
     s.tmp_4 = r0;
     r0 = (s.tmp_4 - 1);
     s.tmp_3 = r0;
     r0 = (s.tmp_2 * s.tmp_3);
     s.tmp_1 = r0;
     r0 = (s.tmp_1 | 0);
-    globals.r___21209 = (r0);
+    globals.r___21640 = (r0);
     { step = 3; continue; }
   case 4:
-    globals.cr___21215 = (globals.r___21209);
-    r0 = pxsim_Array__getAt(globals.pics___21189, globals.cr___21215);
-    globals.pic___21217 = (r0);
+    globals.cr___21646 = (globals.r___21640);
+    r0 = pxsim_Array__getAt(globals.pics___21620, globals.cr___21646);
+    globals.pic___21648 = (r0);
     { step = 6; continue; }
   case 5:
-    r0 = (globals.t___21221 + 1);
-    globals.t___21221 = (r0);
+    r0 = (globals.t___21652 + 1);
+    globals.t___21652 = (r0);
   case 6:
   case 7:
     r0 = undefined;
     return leave(s, r0)
   default: oops()
 } } }
-inline__P21223.info = {"start":569,"length":355,"line":22,"column":8,"endLine":32,"endColumn":1,"fileName":"test.ts","functionName":"inline","argumentNames":[]}
+inline__P21654.info = {"start":569,"length":355,"line":22,"column":8,"endLine":32,"endColumn":1,"fileName":"test.ts","functionName":"inline","argumentNames":[]}
 
-function inline__P21223_mk(s) {
+function inline__P21654_mk(s) {
     checkStack(s.depth);
     return {
-        parent: s, fn: inline__P21223, depth: s.depth + 1,
+        parent: s, fn: inline__P21654, depth: s.depth + 1,
         pc: 0, retval: undefined, r0: undefined, overwrittenPC: false, lambdaArgs: null,
   tmp_0: undefined,
   tmp_1: undefined,
@@ -45073,7 +45073,7 @@ const sprites_BaseSpriteSayRenderer__C2276_VT = mkVTable({
   },
 });
 
-const breakpoints = setupDebugger(1, ["BAYER4X4_DATA___7019","BAYER8X8_DATA___7022","BAYER16X16_DATA___7025","frowBuf___7040","trowBuf___7043","curBayer___7046","local_math_clamp___7052","local_math_abs___7054","local_neg_abs___7056","paused___21174","pics___21189","r___21209","cr___21215","pic___21217","t___21221","bn___7050","bs___7034","ibx___7036","bx___7028","iby___7038","by___7030","b___7032"])
+const breakpoints = setupDebugger(1, ["BAYER4X4_DATA___7019","BAYER8X8_DATA___7022","BAYER16X16_DATA___7025","frowBuf___7040","trowBuf___7043","curBayer___7046","local_math_clamp___7052","local_math_abs___7054","local_neg_abs___7056","paused___21605","pics___21620","r___21640","cr___21646","pic___21648","t___21652","bn___7050","bs___7034","ibx___7036","bx___7028","iby___7038","by___7030","b___7032"])
 
-return _main___P21305
+return _main___P21719
 })
