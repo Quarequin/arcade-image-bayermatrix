@@ -49,7 +49,7 @@ FF 7F DF 5F F7 77 D7 57 FD 7D DD 5D F5 75 D5 55
     // bayer_drawcore
     // - bayer_drawcore's init (section.data like)
     let bx: int32 = 0x0, by: int32 = 0x0, b: uint8 = 0x00,
-        bs: int8 = 0x00, bn: int8 = 0xff, ibx: int32 = 0x0, iby: int32 = 0x0;
+        bs: uint8 = 0x00, bn: int8 = 0xff, ibx: int32 = 0x0, iby: int32 = 0x0;
     let frowBuf: Buffer = hex``, trowBuf: Buffer = hex``, curBayer: Buffer = hex``;
     let bayer_drawcore_inuse = false;
     // - reused function (not referense from makecode arcade bulit-in function)
@@ -82,19 +82,20 @@ FF 7F DF 5F F7 77 D7 57 FD 7D DD 5D F5 75 D5 55
         switch (frowBuf.length) { case from.height: break; default: frowBuf = pins.createBuffer(from.height); }
         switch (trowBuf.length) { case to.height: break; default: trowBuf = pins.createBuffer(to.height); }
         for (ibx = local_neg_abs(x); ibx < from.width; ibx++) {
-            if (ibx + x < 0) continue;
-            if (ibx + x >= to.width) break;
+            bx = ibx+x;
+            if (bx < 0) continue;
+            if (bx >= to.width) break;
             from.getRows(ibx, frowBuf);
-            to.getRows(ibx + x, trowBuf);
-            bx = ibx+x; bx = bx&bn;
+            to.getRows(bx, trowBuf);
+            bx = bx&bn;
             for (iby = local_neg_abs(y); iby < frowBuf.length; iby++) {
-                if (iby + y < 0) continue;
-                if (iby + y >= trowBuf.length) break;
+                by = iby+y;
+                if (by >= trowBuf.length) break;
                 switch (transparent) { case !!frowBuf[iby]:
-                switch (trowBuf[iby + y]) { case frowBuf[iby]: break; default:
-                    by = iby+y; by = by&bn;
-                    by = Math.imul(by,bs); by = by+bx;
-                    b = curBayer[by];
+                switch (trowBuf[by]) { case frowBuf[iby]: break; default:
+                    by = by&bn; bs = bn+1;
+                    bs = Math.imul(by,bs); bs = bs+bx;
+                    b = curBayer[bs];
                     if (opacity < b) break;
                     trowBuf[iby + y] = frowBuf[iby];
                 } }
