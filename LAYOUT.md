@@ -15,13 +15,13 @@
 This extension treats performance as a layered problem — each layer below builds on the one above it. The guiding rule throughout: **name a register once, reuse it forever; never let the runtime guess what you meant.**
 
 ```
-1. Allocation           → registers declared once at init
-2. Call stack depth     → max 2 nested function calls
-3. Branch dispatch      → switch-case with clamped/mod-narrowed ranges
-4. Type representation  → explicit integer typing
-5. Expression stack     → one operation per statement
-6. Memory footprint     → variable recycling for short-lived roles
-7. Correctness          → reentrancy guard for shared state
+1. Allocation           -> registers declared once at init
+2. Call stack depth     -> max 2 nested function calls
+3. Branch dispatch      -> switch-case with clamped/mod-narrowed ranges
+4. Type representation  -> explicit integer typing
+5. Expression stack     -> one operation per statement
+6. Memory footprint     -> variable recycling for short-lived roles
+7. Correctness          -> reentrancy guard for shared state
 ```
 
 ---
