@@ -48,9 +48,9 @@ FF 7F DF 5F F7 77 D7 57 FD 7D DD 5D F5 75 D5 55
 `;
     // bayer_drawcore
     // - bayer_drawcore's init (section.data like)
-    let bx: number = 0x0, by: number = 0x0, b: number = 0x0, bs: number = 0x0, ibx: number = 0x0, iby: number = 0x0;
-    let frowBuf: Buffer = hex``, trowBuf: Buffer = hex``;
-    let curBayer: Buffer = hex``, bn: number = -1;
+    let bx: int32 = 0x0, by: int32 = 0x0, b: uint8 = 0x00,
+        bs: int8 = 0x00, bn: int8 = 0xff, ibx: int32 = 0x0, iby: int32 = 0x0;
+    let frowBuf: Buffer = hex``, trowBuf: Buffer = hex``, curBayer: Buffer = hex``;
     let bayer_drawcore_inuse = false;
     // - reused function (not referense from makecode arcade bulit-in function)
     const local_math_abs = Math.abs,
@@ -89,13 +89,15 @@ FF 7F DF 5F F7 77 D7 57 FD 7D DD 5D F5 75 D5 55
             if (ibx + x >= to.width) break;
             from.getRows(ibx, frowBuf);
             to.getRows(ibx + x, trowBuf);
-            bx = (ibx + x) & bn;
+            bx = ibx+x; bx = bx&bn;
             for (iby = local_neg_abs(y); iby < frowBuf.length; iby++) {
                 if (iby + y < 0) continue;
                 if (iby + y >= trowBuf.length) break;
                 if (transparent && !frowBuf[iby]) continue;
                 switch (trowBuf[iby + y] === frowBuf[iby]) { case false:
-                    by = (iby + y) & bn; b = curBayer[bx + Math.imul(by, bs)];
+                    by = iby+y; by = by&bn;
+                    by = by*bs; by = by+bx;
+                    b = curBayer[by];
                     if (opacity >= b) trowBuf[iby + y] = frowBuf[iby];
                 }
             }
