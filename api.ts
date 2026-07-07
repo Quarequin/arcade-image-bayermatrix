@@ -12,13 +12,13 @@ namespace image {
 
 namespace helpers {
 
-    const BAYER4X4_DATA: Buffer = hex`
+    const BAYER_4X4: Buffer = hex`
 00 88 22 AA
 CC 44 EE 66
 33 BB 11 99
 DD 55 FF 77
 `;
-    const BAYER8X8_DATA: Buffer = hex`
+    const BAYER_8X8: Buffer = hex`
 00 C2 33 F2 0E CE 3F FF
 82 43 B2 73 8E 4F BE 7F
 22 E3 12 D3 2E EF 1E DF
@@ -28,7 +28,7 @@ A2 63 92 53 AE 6F 9E 5F
 2A EB 1A DB 26 E7 16 D7
 AA 6A 9A 5B A6 66 96 57
 `;
-    const BAYER16X16_DATA: Buffer = hex`
+    const BAYER_16X16: Buffer = hex`
 00 80 20 A0 08 88 28 A8 02 82 22 A2 0A 8A 2A AA
 C0 40 E0 60 C8 48 E8 68 C2 42 E2 62 CA 4A EA 6A
 30 B0 10 90 38 B8 18 98 32 B2 12 92 3A BA 1A 9A
@@ -62,11 +62,11 @@ FF 7F DF 5F F7 77 D7 57 FD 7D DD 5D F5 75 D5 55
         bayer_drawcore_inuse = true;
         switch (level) {
             case image.BayerSize.x4: switch (bn) { case image.BayerSize.x4:
-            break; default: curBayer = BAYER4X4_DATA; bn = 0x3; } break;
+            break; default: curBayer = BAYER_4X4; bn = 0x3; } break;
             case image.BayerSize.x8: default: switch (bn) { case image.BayerSize.x8:
-            break; default: curBayer = BAYER8X8_DATA; bn = 0x7; } break;
+            break; default: curBayer = BAYER_8X8; bn = 0x7; } break;
             case image.BayerSize.x16: switch (bn) { case image.BayerSize.x16:
-            break; default: curBayer = BAYER16X16_DATA; bn = 0xF; } break;
+            break; default: curBayer = BAYER_16X16; bn = 0xF; } break;
         }
         x = x|0, y = y|0, opacity = opacity&0xff;
         switch (opacity) {
