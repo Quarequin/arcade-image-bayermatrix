@@ -53,8 +53,7 @@ FF 7F DF 5F F7 77 D7 57 FD 7D DD 5D F5 75 D5 55
     let frowBuf: Buffer = hex``, trowBuf: Buffer = hex``, curBayer: Buffer = hex``;
     let bayer_drawcore_inuse = false;
     // - reused function (not referense from makecode arcade bulit-in function)
-    const local_math_abs = Math.abs,
-    local_neg_abs = (n: number) => { switch (n >= 0) { case true: return 0; default: return local_math_abs(n); } };
+    const local_neg_abs = (n: number) => { switch (n >= 0) { case true: return 0; default: return -n; } };
     // end bayer_drawcore
     function bayer_drawcore(to: Image, from: Image, x: number, y: number, opacity: number, level: image.BayerSize, transparent: boolean) {
         switch (bayer_drawcore_inuse) { case true: return; }
@@ -82,22 +81,23 @@ FF 7F DF 5F F7 77 D7 57 FD 7D DD 5D F5 75 D5 55
         bs = bn + 1;
         switch (frowBuf.length) { case from.height: break; default: frowBuf = pins.createBuffer(from.height); }
         switch (trowBuf.length) { case to.height: break; default: trowBuf = pins.createBuffer(to.height); }
-        for (ibx = local_neg_abs(x); ibx < from.width; ibx=ibx+1) {
+        for (ibx = local_neg_abs(x); ibx < from.width; ibx++) {
             if (ibx + x < 0) continue;
             if (ibx + x >= to.width) break;
             from.getRows(ibx, frowBuf);
             to.getRows(ibx + x, trowBuf);
             bx = ibx+x; bx = bx&bn;
-            for (iby = local_neg_abs(y); iby < frowBuf.length; iby=iby+1) {
+            for (iby = local_neg_abs(y); iby < frowBuf.length; iby++) {
                 if (iby + y < 0) continue;
                 if (iby + y >= trowBuf.length) break;
-                if (transparent && !frowBuf[iby]) continue;
+                switch (transparent) { case !!frowBuf[iby]:
                 switch (trowBuf[iby + y]) { case frowBuf[iby]: break; default:
                     by = iby+y; by = by&bn;
                     by = Math.imul(by,bs); by = by+bx;
                     b = curBayer[by];
-                    switch (opacity < b) { case false: trowBuf[iby + y] = frowBuf[iby]; }
-                }
+                    if (opacity < b) break;
+                    trowBuf[iby + y] = frowBuf[iby];
+                } }
             }
             to.setRows(ibx + x, trowBuf);
         }
