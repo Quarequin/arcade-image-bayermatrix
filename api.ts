@@ -54,7 +54,7 @@ FF 7F DF 5F F7 77 D7 57 FD 7D DD 5D F5 75 D5 55
     let bayer_drawcore_inuse = false;
     // - reused function (not referense from makecode arcade bulit-in function)
     const local_math_abs = Math.abs,
-    local_neg_abs = (n: number) => { switch (n >= 0) { case true: return 0; default: return local_math_abs(n); } };
+    local_neg_abs = (n: number) => { if (n >= 0) return 0; return local_math_abs(n); };
     // end bayer_drawcore
     function bayer_drawcore(to: Image, from: Image, x: number, y: number, opacity: number, level: image.BayerSize, transparent: boolean) {
         switch (bayer_drawcore_inuse) { case true: return; }
@@ -62,42 +62,44 @@ FF 7F DF 5F F7 77 D7 57 FD 7D DD 5D F5 75 D5 55
         switch (to) { case from: return; }
         bayer_drawcore_inuse = true;
         switch (level) {
-            case image.BayerSize.x4: switch (bn) { case image.BayerSize.x4:
-            break; default: curBayer = BAYER4X4_DATA; bn = 0x3; } break;
-            case image.BayerSize.x8: default: switch (bn) { case image.BayerSize.x8:
-            break; default: curBayer = BAYER8X8_DATA; bn = 0x7; } break;
-            case image.BayerSize.x16: switch (bn) { case image.BayerSize.x16:
-            break; default: curBayer = BAYER16X16_DATA; bn = 0xF; } break;
+            case image.BayerSize.x4: if (bn === image.BayerSize.x4) break;
+                curBayer = BAYER4X4_DATA; bn = 0x3; break;
+            case image.BayerSize.x8: default: if (bn === image.BayerSize.x8) break;
+                curBayer = BAYER8X8_DATA; bn = 0x7; break;
+            case image.BayerSize.x16: if (bn === image.BayerSize.x16) break;
+                curBayer = BAYER16X16_DATA; bn = 0xF; break;
         }
         x = x|0, y = y|0, opacity = opacity&0xff;
         switch (opacity) {
             case 0xff:
-            switch (transparent) { case true: to.drawTransparentImage(from, x, y);
-            break; default: to.drawImage(from, x, y); }
-            bayer_drawcore_inuse = false; return;
+            if (transparent) to.drawTransparentImage(from, x, y);
+            else to.drawImage(from, x, y);
+            bayer_drawcore_inuse = false;
+            return;
             case 0x00:
-            switch (transparent) { case false: to.fillRect(x, y, from.width, from.height, 0x0); }
-            bayer_drawcore_inuse = false; return;
+            if (!transparent) to.fillRect(x, y, from.width, from.height, 0x0);
+            bayer_drawcore_inuse = false;
+            return;
         }
         bs = bn + 1;
-        switch (frowBuf.length) { case from.height: break; default: frowBuf = pins.createBuffer(from.height); }
-        switch (trowBuf.length) { case to.height: break; default: trowBuf = pins.createBuffer(to.height); }
-        for (ibx = local_neg_abs(x); ibx < from.width; ibx=ibx+1) {
+        switch (frowBuf.length === from.height) { case false: frowBuf = pins.createBuffer(from.height); }
+        switch (trowBuf.length === to.height) { case false: trowBuf = pins.createBuffer(to.height); }
+        for (ibx = local_neg_abs(x); ibx < from.width; ibx++) {
             if (ibx + x < 0) continue;
             if (ibx + x >= to.width) break;
             from.getRows(ibx, frowBuf);
             to.getRows(ibx + x, trowBuf);
             bx = ibx+x; bx = bx&bn;
-            for (iby = local_neg_abs(y); iby < frowBuf.length; iby=iby+1) {
+            for (iby = local_neg_abs(y); iby < frowBuf.length; iby++) {
                 if (iby + y < 0) continue;
                 if (iby + y >= trowBuf.length) break;
-                switch (transparent && !frowBuf[iby]) { case false:
-                switch (trowBuf[iby + y]) { case frowBuf[iby]: break; default:
+                if (transparent && !frowBuf[iby]) continue;
+                switch (trowBuf[iby + y] === frowBuf[iby]) { case false:
                     by = iby+y; by = by&bn;
-                    by = Math.imul(by,bs); by = by+bx;
+                    by = by*bs; by = by+bx;
                     b = curBayer[by];
-                    switch (opacity < b) { case false: trowBuf[iby + y] = frowBuf[iby]; }
-                } }
+                    if (opacity >= b) trowBuf[iby + y] = frowBuf[iby];
+                }
             }
             to.setRows(ibx + x, trowBuf);
         }
