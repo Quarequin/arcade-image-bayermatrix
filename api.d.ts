@@ -31,13 +31,13 @@ declare namespace helpers {
 declare interface Image {
 
     /**
-     * Draw image with pseudo-opacity(0-255) into current image
+     * Draw image with pseudo-opacity(0-255) of bayer-matrix into current image
      * @param source image
      * @param draw to current image
-     * @param x position of dist image
-     * @param y position of dist image
+     * @param x position of current image
+     * @param y position of current image
      * @param opacity as 0-255 for pseudo-opacity
-     * @param precomputed bayer-matrix size as enum
+     * @param precomputed bayer-matrix size as number of enum
      */
     //% blockNamespace=images inlineInputMode=inline blockId=image_draw_opacity_bayer
     //% block="%this draw matrix %from at x %x y %y opacity $opacity on %level"
