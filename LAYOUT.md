@@ -1,7 +1,7 @@
 <h1 align="center">LAYOUT.md</h1>
 
 <p align="center">
-  <i>Engineering principles behind the register-based design of arcade-image-bayermatrix.</i>
+  <i>Engineering principles behind the registerBased design of arcade-image-bayermatrix.</i>
 </p>
 
 <p align="center">
@@ -15,13 +15,14 @@
 This extension treats performance as a layered problem — each layer below builds on the one above it. The guiding rule throughout: **name a register once, reuse it forever; never let the runtime guess what you meant.**
 
 ```
-1. Allocation           -> registers declared once at init
-2. Call stack depth     -> max 2 nested function calls
-3. Branch dispatch      -> switch-case with clamped/mod-narrowed ranges or true/false check
-4. Type representation  -> explicit integer typing
-5. Expression stack     -> one operation per statement
-6. Memory footprint     -> variable recycling for short-lived roles
-7. Correctness          -> reentrancy guard for shared state
+1. Allocation           → registers declared once at init
+2. Call stack depth     → max 2 nested function calls
+3. Branch dispatch      → switch-case with clamped/mod-narrowed ranges
+4. Type representation  → explicit integer typing
+5. Expression stack     → one operation per statement
+6. Memory footprint     → variable recycling for short-lived roles
+7. Correctness          → reentrancy guard for shared state
+8. Validation            → benchmark harness measuring each layer's payoff
 ```
 
 ---
@@ -40,9 +41,9 @@ Function calls are kept to at most two levels deep (a function calling a functio
 
 ## 3. Branch dispatch — switch-case on narrowed ranges
 
-`if/else` chains are replaced with `switch/case` **specifically for conditions whose range has already been narrowed** (via `clamp()` or `mod 2^n`) and for true/false comparisons unrelated to loop breaking.
+`if/else` chains are replaced with `switch/case` **specifically for conditions whose range has already been narrowed** (via `clamp()` or `mod 2^n`) and for true/false comparisons unrelated to loop breaking — and only where the swap is confirmed to actually pay off, not everywhere the pattern could theoretically apply.
 
-**Why it matters:** an `if/else` chain costs O(n) in the worst case — the interpreter checks conditions one at a time until one matches. A `switch/case` over a narrow, known range can compile down to a **jump table**: an O(1) direct jump to the right branch. Loop-breaking conditions are deliberately left as plain `if` statements, since they're single boolean checks with no branch fan-out for a jump table to help with.
+**Why it matters:** an `if/else` chain costs O(n) in the worst case — the interpreter checks conditions one at a time until one matches. A `switch/case` over a narrow, known range can compile down to a **jump table**: an O(1) direct jump to the right branch. Loop-breaking conditions are deliberately left as plain `if` statements, since they're single boolean checks with no branch fan-out for a jump table to help with. The conversion is applied selectively, guided by the benchmark harness in [§8](#8-validation--testfile-benchmark-harness) rather than blanket-applied on theory alone.
 
 ## 4. Type representation — explicit integers
 
@@ -66,7 +67,13 @@ Variables with a minor role, or that are only read/written briefly before going 
 
 `bayer_drawcore_inuse` is a manual reentrancy guard (a lightweight mutex) around the `bayer_drawcore` function. If the function is already in use, callers are forced to return early instead of proceeding; once the function finishes and is free, the flag clears and another state can use it.
 
-**Why it matters:** a class-based design gets per-instance state isolation for free, so concurrent calls don't collide. A shared register set doesn't have that safety net — if two states called `bayer_drawcore` at the same time, they'd overwrite each other's in-progress values. The alternative fix (duplicating the register set per state) would undo the whole point of register-based design. A single boolean check is the cheapest way to keep correctness without paying that cost.
+**Why it matters:** a class-based design gets per-instance state isolation for free, so concurrent calls don't collide. A shared register set doesn't have that safety net — if two states called `bayer_drawcore` at the same time, they'd overwrite each other's in-progress values. The alternative fix (duplicating the register set per state) would undo the whole point of registerBased design. A single boolean check is the cheapest way to keep correctness without paying that cost.
+
+## 8. Validation — testFile benchmark harness
+
+The `testFile` area of the demo randomizes `bayerMatrixSize` at runtime and measures the resulting fps, specifically to find which matrix sizes cause a measurable frame-rate drop.
+
+**Why it matters:** every optimization above (§1–§7) is a claim about performance, not a guarantee. `testFile` turns those claims into numbers by sweeping matrix sizes (e.g. 2×2, 4×4, 8×8) and logging fps for each — separating "should be faster" from "measured faster." This is also what governs decisions like §3: a branch is only converted to `switch/case` once the harness shows it's worth it. `testFile` is kept separate from the main showcase demo so benchmarking and visual demonstration don't interfere with each other.
 
 ---
 
@@ -76,10 +83,11 @@ Variables with a minor role, or that are only read/written briefly before going 
 |---|---|---|
 | Register declaration | Per-frame allocation | GC pauses |
 | Call depth ≤ 2 | Deep call stacks | Stack frame overhead |
-| Switch-case (narrowed) | Linear condition checking | O(n) branch evaluation |
+| Switch-case (narrowed, profiled) | Linear condition checking | O(n) branch evaluation |
 | Explicit integer typing | Ambiguous numeric representation | Runtime type coercion |
 | Per-statement expressions | Deep operand stacks | Anonymous stack pressure |
 | Variable recycling | Redundant registers | Memory footprint |
 | Reentrancy guard | Shared-state collisions | Duplicated register sets |
+| Benchmark harness (testFile) | Optimizing on theory alone | Unverified performance claims |
 
 This is systematic, not incidental — each layer is a deliberate, named target, applied in the order that made sense as the extension grew. It's the same discipline demoscene and embedded game developers apply at the assembly level (register allocation, stack pressure, jump tables), carried over into a MakeCode Arcade extension that also has to stay reviewable by a human — the lesson carried forward from [arcade-polymesh](LESSONS/FROM/ARCADE/POLYMESH.md).
