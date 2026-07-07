@@ -8,6 +8,8 @@
   See also: <a href="LESSONS/FROM/ARCADE/POLYMESH.md">LESSONS/FROM/ARCADE/POLYMESH.md</a> for why this approach was chosen over class-based design.
 </p>
 
+---
+
 ## Overview
 
 This extension treats performance as a layered problem — each layer below builds on the one above it. The guiding rule throughout: **name a register once, reuse it forever; never let the runtime guess what you meant.**
