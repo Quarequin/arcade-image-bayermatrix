@@ -12,11 +12,7 @@
 </p>
 
 <p align="center">
-  <a href="https://quarequin.github.io/arcade-image-bayermatrix"><b>▶ Live demo</b></a>
-</p>
-
-<p align="center">
-  <a href="LAYOUT.md">LAYOUT.md</a>
+  <a href="https://quarequin.github.io/arcade-image-bayermatrix"><b>▶ Live demo</b></a> | <a href="LAYOUT.md"><b>LAYOUT.md</b></a>
 </p>
 
 ---
