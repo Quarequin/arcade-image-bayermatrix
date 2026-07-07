@@ -1,7 +1,7 @@
 <h1 align="center">LAYOUT.md</h1>
 
 <p align="center">
-  <i>Engineering principles behind the registerBased design of arcade-image-bayermatrix.</i>
+  <i>Engineering principles behind the register-based design of arcade-image-bayermatrix.</i>
 </p>
 
 <p align="center">
@@ -66,7 +66,7 @@ Variables with a minor role, or that are only read/written briefly before going 
 
 `bayer_drawcore_inuse` is a manual reentrancy guard (a lightweight mutex) around the `bayer_drawcore` function. If the function is already in use, callers are forced to return early instead of proceeding; once the function finishes and is free, the flag clears and another state can use it.
 
-**Why it matters:** a class-based design gets per-instance state isolation for free, so concurrent calls don't collide. A shared register set doesn't have that safety net — if two states called `bayer_drawcore` at the same time, they'd overwrite each other's in-progress values. The alternative fix (duplicating the register set per state) would undo the whole point of registerBased design. A single boolean check is the cheapest way to keep correctness without paying that cost.
+**Why it matters:** a class-based design gets per-instance state isolation for free, so concurrent calls don't collide. A shared register set doesn't have that safety net — if two states called `bayer_drawcore` at the same time, they'd overwrite each other's in-progress values. The alternative fix (duplicating the register set per state) would undo the whole point of register-based design. A single boolean check is the cheapest way to keep correctness without paying that cost.
 
 ---
 
