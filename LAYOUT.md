@@ -1,11 +1,11 @@
-<h1 align="center">CODE-LAYOUT</h1>
+<h1 align="center">LAYOUT.md</h1>
 
 <p align="center">
   <i>Engineering principles behind the registerBased design of arcade-image-bayermatrix.</i>
 </p>
 
 <p align="center">
-  See also: <a href="LESSONS/FROM/ARCADE/POLYMESH.md">LESSONS-FROM-ARCADE-POLYMESH</a> for why this approach was chosen over class-based design.
+  See also: <a href="LESSONS/FROM/ARCADE/POLYMESH.md">LESSONS/FROM/ARCADE/POLYMESH.md</a> for why this approach was chosen over class-based design.
 </p>
 
 ---
