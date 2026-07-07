@@ -1,6 +1,6 @@
 {
     "name": "Image Bayermatrix",
-    "version": "0.1.8",
+    "version": "0.1.9",
     "description": "[Makecode arcade] bayer matrix to make pseudo opacity for image.",
     "dependencies": {
         "device": "*"
