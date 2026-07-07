@@ -91,13 +91,13 @@ FF 7F DF 5F F7 77 D7 57 FD 7D DD 5D F5 75 D5 55
             for (iby = local_neg_abs(y); iby < frowBuf.length; iby=iby+1) {
                 if (iby + y < 0) continue;
                 if (iby + y >= trowBuf.length) break;
-                switch (transparent && !frowBuf[iby]) { case false:
+                if (transparent && !frowBuf[iby]) continue;
                 switch (trowBuf[iby + y]) { case frowBuf[iby]: break; default:
                     by = iby+y; by = by&bn;
                     by = Math.imul(by,bs); by = by+bx;
                     b = curBayer[by];
                     switch (opacity < b) { case false: trowBuf[iby + y] = frowBuf[iby]; }
-                } }
+                }
             }
             to.setRows(ibx + x, trowBuf);
         }
