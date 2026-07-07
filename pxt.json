@@ -10,7 +10,6 @@
         "api.ts",
         "main.blocks",
         "main.ts",
-        "icon.png",
         "README.md"
     ],
     "testFiles": [
