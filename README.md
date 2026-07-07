@@ -12,7 +12,7 @@
 </p>
 
 <p align="center">
-  <a href="https://quarequin.github.io/arcade-image-bayermatrix"><b>▶ Live demo</b></a>
+  <a href="https://quarequin.github.io/arcade-image-bayermatrix"><b>▶ Live demo</b></a> | <a href="LAYOUT.md"><b>LAYOUT.md</b></a>
 </p>
 
 ---
@@ -83,4 +83,7 @@ See [LICENSE](LICENSE.txt).
 
 * for PXT/arcade
 
-[LESSONS-FROM-ARCADE-POLYMESH](LESSONS/FROM/ARCADE/POLYMESH.md)
+---
+<p align="center">
+  <a href="#arcade-image-bayermatrix">goto top</a>
+</p> 
