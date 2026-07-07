@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="icon.png" alt="arcade-image-bayermatrix icon" width="80" onerror="this.style.display='none'">
+  <img src="icon.png" alt="arcade-image-bayermatrix icon" width="256" onerror="this.style.display='none'">
 </p>
 
 <h1 align="center">arcade-image-bayermatrix</h1>
