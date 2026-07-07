@@ -17,7 +17,7 @@ This extension treats performance as a layered problem — each layer below buil
 ```
 1. Allocation           -> registers declared once at init
 2. Call stack depth     -> max 2 nested function calls
-3. Branch dispatch      -> switch-case with clamped/mod-narrowed ranges
+3. Branch dispatch      -> switch-case with clamped/mod-narrowed ranges or true/false check
 4. Type representation  -> explicit integer typing
 5. Expression stack     -> one operation per statement
 6. Memory footprint     -> variable recycling for short-lived roles
