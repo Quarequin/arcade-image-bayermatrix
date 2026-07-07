@@ -16,7 +16,7 @@
 </p>
 
 <p align="center">
-  <a href="LESSONS/FROM/ARCADE/POLYMESH.md">LESSONS-FROM-ARCADE-POLYMESH</a>  <a href="LAYOUT.md">CODE-LAYOUT</a>
+  <a href="LAYOUT.md">LAYOUT.md</a>
 </p>
 
 ---
