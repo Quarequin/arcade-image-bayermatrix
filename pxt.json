@@ -6,9 +6,10 @@
         "device": "*"
     },
     "files": [
+        "enums.d.ts",
         "helpers.cpp",
-        "imgbayer.d.ts",
-        "imgbayer.ts",
+        "image.d.ts",
+        "image.ts",
         "main.blocks",
         "main.ts",
         "README.md"
