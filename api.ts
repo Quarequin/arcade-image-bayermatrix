@@ -5,7 +5,7 @@ namespace helpers {
 00 88 22 AA
 CC 44 EE 66
 33 BB 11 99
-DD 55 FF 77
+FF 55 DD 77
 `;
     const BAYER8X8_DATA = hex`
 00 C2 33 F2 0E CE 3F FF
