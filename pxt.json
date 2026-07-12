@@ -6,8 +6,8 @@
         "device": "*"
     },
     "files": [
-        "/image/bayermat/bayer.d.ts",
-        "/image/bayermat/bayer.ts",
+        "imgbayer.d.ts",
+        "imgbayer.ts",
         "main.blocks",
         "main.ts",
         "README.md"
