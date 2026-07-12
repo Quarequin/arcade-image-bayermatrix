@@ -6,6 +6,7 @@
         "device": "*"
     },
     "files": [
+        "helpers.cpp",
         "imgbayer.d.ts",
         "imgbayer.ts",
         "main.blocks",
