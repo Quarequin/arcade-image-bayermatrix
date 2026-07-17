@@ -1,6 +1,7 @@
 
 namespace helpers {
 
+    // section.rodata
     const BAYER4X4_DATA = hex`
 00 88 22 AA
 CC 44 EE 66
@@ -35,19 +36,29 @@ CF 4F EF 6F C7 47 E7 67 CD 4D ED 6D C5 45 E5 65
 3F BF 1F 9F 37 B7 17 97 3D BD 1D 9D 35 B5 15 95
 FF 7F DF 5F F7 77 D7 57 FD 7D DD 5D F5 75 D5 55
 `;
-    // bayer_drawcore
-    // - bayer_drawcore's init (section.data like)
-    let bx: int32 = 0x0, by: int32 = 0x0, b: uint8 = 0x00,
-        bs: int8 = 0x00, bn: int8 = 0xff, ibx: int32 = 0x0, iby: int32 = 0x0;
-    let frowBuf = hex``, trowBuf = hex``, curBayer = hex``;
+    const local_neg_abs = (n: number) => { if (n >= 0) return 0; return -n; };
+    // end section.rodata
+    // section.data
+    // - bayer_drawcore's item
+    let bx:  int32 = 0x0;
+    let by:  int32 = 0x0;
+    let bs:  int8  = 0x00;
+    let bn:  int8  = 0xff;
+    let b:   uint8 = 0x00;
+    let ibx: int32 = 0x0;
+    let iby: int32 = 0x0;
+    let frowBuf  = hex``;
+    let trowBuf  = hex``;
+    let curBayer = hex``;
     let bayer_drawcore_inuse = false;
     // - reused function (not referense from makecode arcade bulit-in function)
-    const local_neg_abs = (n: number) => { if (n >= 0) return 0; return -n; };
-    // end bayer_drawcore
+    // end section.data
+
+    // % shim=helpers::bayer_drawcore async
     function bayer_drawcore(to: Image, from: Image, x: number, y: number, opacity: number, level: image.BayerSize, transparent: boolean) {
         switch (bayer_drawcore_inuse) { case true: return; }
         switch (!to || !from) { case true: return; }
-        switch (to) { case from: return; }
+        switch (to == from) { case true: return; }
         bayer_drawcore_inuse = true;
         switch (level) {
             case bn: break;
@@ -58,7 +69,7 @@ FF 7F DF 5F F7 77 D7 57 FD 7D DD 5D F5 75 D5 55
             case image.BayerSize.x16:
                 curBayer = BAYER16X16_DATA; bn = 0xF; break;
         }
-        x = x|0, y = y|0, opacity = opacity&0xff;
+        x = x|0; y = y|0; opacity = opacity&0xff; bs = bn+1;
         switch (opacity) {
             case 0xff:
             if (transparent) to.drawTransparentImage(from, x, y);
@@ -70,7 +81,6 @@ FF 7F DF 5F F7 77 D7 57 FD 7D DD 5D F5 75 D5 55
             bayer_drawcore_inuse = false;
             return;
         }
-        bs = bn + 1;
         switch (frowBuf.length === from.height) { case false: frowBuf = pins.createBuffer(from.height); }
         switch (trowBuf.length === to.height) { case false: trowBuf = pins.createBuffer(to.height); }
         for (ibx = local_neg_abs(x); ibx < from.width; ibx++) {
@@ -81,12 +91,12 @@ FF 7F DF 5F F7 77 D7 57 FD 7D DD 5D F5 75 D5 55
             for (iby = local_neg_abs(y); iby < frowBuf.length; iby++) {
                 if (iby + y >= trowBuf.length) break;
                 if (transparent && !frowBuf[iby]) continue;
-                switch (trowBuf[iby + y] === frowBuf[iby]) { case false:
-                    by = iby+y; by = by&bn;
-                    by = Math.imul(by,bs); by = by+bx;
-                    b = curBayer[by];
-                    if (opacity >= b) trowBuf[iby + y] = frowBuf[iby];
-                }
+                if (trowBuf[iby + y] === frowBuf[iby]) continue;
+                by = iby+y; by = by&bn;
+                by = Math.imul(by,bs); by = by+bx;
+                b = curBayer[by];
+                if (opacity <= b) continue;
+                trowBuf[iby + y] = frowBuf[iby];
             }
             to.setRows(ibx + x, trowBuf);
         }
